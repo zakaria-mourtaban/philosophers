@@ -6,9 +6,11 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 12:14:52 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/24 18:12:42 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:05:49 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 long long	ft_atoll(const char *str)
 {
@@ -19,7 +21,7 @@ long long	ft_atoll(const char *str)
 	result = 0;
 	sign = 1;
 	i = 0;
-	while (ft_isspace(str[i]))
+	while (str[i] == ' ')
 		i++;
 	if (str[i] == '-')
 	{

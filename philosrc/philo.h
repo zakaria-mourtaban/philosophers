@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:43:24 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/24 18:27:19 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:24:38 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,21 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef struct s_philo
+typedef struct s_philoconf
 {
 	unsigned int	numberofphil;
 	unsigned int	timetoeat;
 	unsigned int	timetosleep;
 	unsigned int	timetodie;
 	unsigned int	timestoeat;
-}					t_philo;
+}					t_philoconf;
+
+typedef struct s_philot
+{
+	pthread_mutex_t	leftforkmutex;
+	pthread_mutex_t	rightforkmutex;
+	int				*lfork;
+	int				*rfork;
+}					t_philot;
 
 #endif

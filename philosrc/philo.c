@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:48:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/24 18:29:32 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:27:30 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	precise_usleep(unsigned int microseconds)
 	struct timeval	start_time;
 	struct timeval	current_time;
 
+	if (microseconds == 0)
+		return ;
 	remaining_time = microseconds;
 	gettimeofday(&start_time, NULL);
 	while (remaining_time > 0)
@@ -40,10 +42,10 @@ void	precise_usleep(unsigned int microseconds)
 	}
 }
 
-void	ac5(int ac, char **av)
+void	ac5(char **av)
 {
-	if (!ft_isdigit(av[1]) || !ft_isdigit(av[2]) || !ft_isdigit(av[3])
-		|| !ft_isdigit(av[4]))
+	if (!ft_isdigit(*av[1]) || !ft_isdigit(*av[2]) || !ft_isdigit(*av[3])
+		|| !ft_isdigit(*av[4]))
 		ft_error("all inputs must be digits");
 	if (ft_strlen(av[1]) > 12 || ft_strlen(av[2]) > 12 || ft_strlen(av[3]) > 12
 		|| ft_strlen(av[4]) > 12)
@@ -56,10 +58,10 @@ void	ac5(int ac, char **av)
 		ft_error("all inputs must be int");
 }
 
-void	ac6(int ac, char **av)
+void	ac6(char **av)
 {
-	if (!ft_isdigit(av[1]) || !ft_isdigit(av[2]) || !ft_isdigit(av[3])
-		|| !ft_isdigit(av[4]) || !ft_isdigit(av[5]))
+	if (!ft_isdigit(*av[1]) || !ft_isdigit(*av[2]) || !ft_isdigit(*av[3])
+		|| !ft_isdigit(*av[4]) || !ft_isdigit(*av[5]))
 		ft_error("all inputs must be digits");
 	if (ft_strlen(av[1]) > 12 || ft_strlen(av[2]) > 12 || ft_strlen(av[3]) > 12
 		|| ft_strlen(av[4]) > 12 || ft_strlen(av[5]) > 12)
@@ -77,16 +79,16 @@ void	ac6(int ac, char **av)
 		ft_error("nums must be bigger than 0");
 }
 
-t_philo	handleinput(int ac, char **av)
+t_philoconf	handleinput(int ac, char **av)
 {
-	t_philo	philo;
+	t_philoconf	philo;
 
 	if (ac < 5 || ac > 6)
 		ft_error("./philo time_to_eat time_to_sleep time_to_die number_of_philosophers");
 	if (ac == 5)
-		ac5(ac, av);
+		ac5(av);
 	if (ac == 6)
-		ac6(ac, av);
+		ac6(av);
 	philo.timetoeat = ft_atoll(av[1]);
 	philo.timetosleep = ft_atoll(av[2]);
 	philo.timetodie = ft_atoll(av[3]);
@@ -94,13 +96,25 @@ t_philo	handleinput(int ac, char **av)
 	if (ac == 6)
 		philo.timestoeat = ft_atoll(av[5]);
 	philo.numberofphil = ft_atoll(av[4]);
+	if (philo.numberofphil == 0)
+		exit(0);
 	return (philo);
 }
 
 int	main(int ac, char **av)
 {
-	t_philo	config;
+	pthread_mutex_t	*mutexs;
+	t_philoconf		config;
+	int				*forks;
 
 	config = handleinput(ac, av);
+	forks = malloc(sizeof(int) * config.numberofphil);
+	if (forks == NULL)
+		ft_error("alloc fail");
+	forks = ft_calloc(config.numberofphil, sizeof(int));
+	mutexs = malloc(sizeof(pthread_mutex_t) * config.numberofphil);
+	if (mutexs == NULL)
+		ft_error("malloc fail free forks");
+	printf("%d", forks[4]);
 	return (0);
 }
