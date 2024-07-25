@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:43:24 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/24 19:24:38 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/26 01:49:14 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
 
@@ -34,8 +35,25 @@ typedef struct s_philot
 {
 	pthread_mutex_t	leftforkmutex;
 	pthread_mutex_t	rightforkmutex;
+	pthread_mutex_t	timesatemutex;
+	size_t			startofsim;
+	size_t			timelastmeal;
 	int				*lfork;
 	int				*rfork;
+	int				timestoeat;
+	int				timesate;
+	int				id;
 }					t_philot;
+
+typedef struct s_philopointer
+{
+	int				timestoeat;
+	pthread_mutex_t *deadmutex;
+	pthread_mutex_t *timestoeatmutex;
+	pthread_mutex_t	*mutexs;
+	pthread_t		*threadid;
+	int				*forks;
+	int				*dead;
+}					t_philopointer;
 
 #endif
