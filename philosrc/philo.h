@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:43:24 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/26 01:49:14 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/27 23:19:01 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,36 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef struct s_philoconf
-{
-	unsigned int	numberofphil;
-	unsigned int	timetoeat;
-	unsigned int	timetosleep;
-	unsigned int	timetodie;
-	unsigned int	timestoeat;
-}					t_philoconf;
-
 typedef struct s_philot
 {
-	pthread_mutex_t	leftforkmutex;
-	pthread_mutex_t	rightforkmutex;
-	pthread_mutex_t	timesatemutex;
-	size_t			startofsim;
-	size_t			timelastmeal;
-	int				*lfork;
-	int				*rfork;
+	pthread_mutex_t	rightfork;
+	pthread_mutex_t	leftfork;
+	pthread_mutex_t	iseatingmutex;
+	unsigned int	timelastmeal;
+	int				iseating;
 	int				timestoeat;
 	int				timesate;
-	int				id;
+	pthread_t		threadid;
 }					t_philot;
 
-typedef struct s_philopointer
+typedef struct s_config
 {
+	pthread_mutex_t	*forkmutexs;
+	pthread_mutex_t	isdeadmutex;
+	pthread_mutex_t	timestoeatmutex;
+	unsigned int	starttime;
+	int				isdead;
+	int				timetoeat;
+	int				timetosleep;
+	int				timetodie;
 	int				timestoeat;
-	pthread_mutex_t *deadmutex;
-	pthread_mutex_t *timestoeatmutex;
-	pthread_mutex_t	*mutexs;
-	pthread_t		*threadid;
-	int				*forks;
-	int				*dead;
-}					t_philopointer;
+	int				numberofphil;
+}					t_config;
+
+typedef struct s_args
+{
+	t_config *config;
+	t_philot *philot;
+}	t_args;
 
 #endif

@@ -6,12 +6,18 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:28:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/06/13 13:47:30 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/27 21:17:45 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdint.h>
+
+void	ft_error(char *msg)
+{
+	ft_putendl_fd(msg, 1);
+	exit(0);
+}
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {

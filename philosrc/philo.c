@@ -1,22 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   philo->c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/24 17:48:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/26 02:25:09 by zmourtab         ###   ########.fr       */
+/*   Created: 2024/07/27 21:01:40 by zmourtab          #+#    #+#             */
+/*   Updated: 2024/07/27 21:11:37 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_error(char *msg)
-{
-	ft_putendl_fd(msg, 1);
-	exit(0);
-}
 
 size_t	get_current_time(void)
 {
@@ -88,210 +82,212 @@ void	ac6(char **av)
 		ft_error("nums must be bigger than 0");
 }
 
-t_philoconf	handleinput(int ac, char **av)
+t_config	*handleinput(int ac, char **av)
 {
-	t_philoconf	philo;
+	t_config	*philo;
 
 	if (ac < 5 || ac > 6)
-		ft_error("./philo time_to_eat time_to_sleep time_to_die number_of_philosophers");
+		ft_error("./exec timetoeat timetosleep timetodie numberofphilosophers");
 	if (ac == 5)
 		ac5(av);
 	if (ac == 6)
 		ac6(av);
-	philo.timetoeat = ft_atoll(av[1]);
-	philo.timetosleep = ft_atoll(av[2]);
-	philo.timetodie = ft_atoll(av[3]);
-	philo.timestoeat = -1;
+	philo = malloc(sizeof(t_config));
+	philo->timetoeat = ft_atoll(av[1]);
+	philo->timetosleep = ft_atoll(av[2]);
+	philo->timetodie = ft_atoll(av[3]);
+	philo->isdead = 0;
+	philo->timestoeat = -1;
 	if (ac == 6)
-		philo.timestoeat = ft_atoll(av[5]);
-	philo.numberofphil = ft_atoll(av[4]);
-	if (philo.numberofphil == 0)
+		philo->timestoeat = ft_atoll(av[5]);
+	philo->numberofphil = ft_atoll(av[4]);
+	if (philo->numberofphil == 0)
 		exit(0);
+	philo->starttime = get_current_time();
 	return (philo);
 }
 
-t_philopointer	*alloc(t_philoconf config)
+void	alloc(t_args *args)
 {
-	int				*forks;
-	int				*timestoeat;
-	pthread_mutex_t	*mutexs;
-	t_philopointer	*philoptr;
-
-	philoptr = malloc(sizeof(philoptr));
-	if (philoptr == NULL)
-		return (NULL);
-	forks = malloc(sizeof(int) * config.numberofphil);
-	if (forks == NULL)
-		return (free(philoptr), ft_error("alloc fail"), NULL);
-	forks = ft_calloc(config.numberofphil, sizeof(int));
-	mutexs = malloc(sizeof(pthread_mutex_t) * config.numberofphil);
-	if (mutexs == NULL)
-		return (free(philoptr), free(forks), ft_error("alloc fail"), NULL);
-	timestoeat = malloc(sizeof(int) * config.numberofphil);
-	if (timestoeat == NULL)
-		return (free(philoptr), ft_error("alloc fail"), NULL);
-	timestoeat = config.timestoeat;
-	philoptr->forks = forks;
-	philoptr->mutexs = mutexs;
-	philoptr->timestoeat = timestoeat;
-	philoptr->dead = malloc(sizeof(int));
-	philoptr->deadmutex = malloc(sizeof(pthread_mutex_t));
-	return (philoptr);
-}
-
-void	initmutex(t_philoconf config, t_philopointer *philoptr)
-{
-	unsigned int	i;
+	int	i;
+	int	l;
 
 	i = 0;
-	while (i < config.numberofphil
-		&& pthread_mutex_init(&(philoptr->mutexs[i++]), NULL) != 0)
-		ft_error("mutex init error should free");
-	pthread_mutex_init(philoptr->deadmutex, NULL);
-	pthread_mutex_init(philoptr->timestoeatmutex, NULL);
-}
-
-t_philot	**mallocphilot(t_philoconf config)
-{
-	unsigned int	i;
-	t_philot		**philot;
-
-	philot = (t_philot **)malloc(sizeof(t_philot) * config.numberofphil);
-	if (philot == NULL)
-		return (NULL);
+	l = 0;
+	args->config->forkmutexs = malloc(sizeof(pthread_mutex_t)
+			* args->config->numberofphil);
+	while (i < args->config->numberofphil)
+		l += pthread_mutex_init(&args->config->forkmutexs[i++], NULL);
 	i = 0;
-	while (i < config.numberofphil)
+	while (i < args->config->numberofphil && l != 1)
+		pthread_mutex_destroy(&args->config->forkmutexs[i++]);
+	pthread_mutex_init(&args->config->isdeadmutex, NULL);
+	pthread_mutex_init(&args->config->timestoeatmutex, NULL);
+	i = 0;
+	args->philot = malloc(sizeof(t_philot) * args->config->numberofphil);
+	while (i < args->config->numberofphil)
 	{
-		philot[i] = malloc(sizeof(philot));
-		if (philot[i] == NULL)
-		{
-			ft_error("free everythang");
-			return (NULL);
-		}
-		philot[i]->id = i;
-		i++;
-	}
-	return (philot);
-}
-
-void	initphilos(t_philoconf config, t_philot **philot,
-		t_philopointer *philoptr)
-{
-	unsigned int	i;
-
-	philot = mallocphilot(config);
-	i = 0;
-	while (i < config.numberofphil)
-	{
-		philot[i]->leftforkmutex = philoptr->mutexs[(philot[i]->timelastmeal
-				- 1) % config.numberofphil];
-		philot[i]->rightforkmutex = philoptr->mutexs[(philot[i]->timelastmeal)
-			% config.numberofphil];
-		philot[i]->lfork = &(philoptr->forks[(philot[i]->timelastmeal - 1)
-				% config.numberofphil]);
-		philot[i]->rfork = &(philoptr->forks[(philot[i]->timelastmeal)
-				% config.numberofphil]);
-		philot[i]->startofsim = get_current_time();
-		philot[i]->timelastmeal = get_current_time();
-		philot[i]->timestoeat = config.timestoeat;
-		philot[i]->timesate = 0;
-		pthread_mutex_init(&(philot[i]->timesatemutex), NULL);
+		pthread_mutex_init(&args->philot[i].iseatingmutex, NULL);
+		args->philot[i].leftfork = args->config->forkmutexs[i
+			% args->config->numberofphil];
+		args->philot[i].rightfork = args->config->forkmutexs[i + 1
+			% args->config->numberofphil];
+		args->philot[i].iseating = 0;
+		args->philot[i].timestoeat = args->config->timestoeat;
+		args->philot[i].timelastmeal = get_current_time();
+		args->philot[i].threadid = i;
 		i++;
 	}
 }
-int	checktimesate(t_philoconf config, t_philot **philot,
-		t_philopointer *philoptr)
+
+int	checktimesate(void *args)
 {
 	int	i;
 	int	timesate;
 
-	if (config.timestoeat == -1)
-		return (0);
-	timesate = 0;
 	i = 0;
-	while (config.timestoeat != -1 && i > config.numberofphil)
+	if (((t_args *)args)->config->timestoeat == -1)
+		return (0);
+	while (i < ((t_args *)args)->config->numberofphil)
 	{
-		pthread_mutex_lock(&philot[i]->timesatemutex);
-		timesate += philot[i]->timesate;
+		timesate += ((t_args *)args)->philot[i].timesate;
 		i++;
-		pthread_mutex_unlock(&philot[i]->timesatemutex);
 	}
-	if (timesate == config.numberofphil * config.timestoeat)
+	if (timesate != ((t_args *)args)->config->timestoeat
+		* ((t_args *)args)->config->numberofphil)
 		return (1);
 	return (0);
 }
 
-int	checkdead(t_philoconf config, t_philot **philot, t_philopointer *philoptr)
+int	checkdead(void *args)
 {
 	int	i;
 
 	i = 0;
-	while (i < config.numberofphil)
+	while (i < ((t_args *)args)->config->numberofphil)
 	{
-		pthread_mutex_lock(philoptr->timestoeatmutex);
+		pthread_mutex_lock(&((t_args *)args)->config->timestoeatmutex);
+		pthread_mutex_lock(&((t_args *)args)->philot[i].iseatingmutex);
 		if (get_current_time()
-			- philot[i]->timelastmeal > philot[i]->timestoeat)
+			- ((t_args *)args)->philot[i].timelastmeal > (size_t)((t_args *)args)->config->timestoeat
+			&& ((t_args *)args)->philot[i].iseating != 1)
 		{
-			printf("he died");
-			pthread_mutex_lock(philoptr->deadmutex);
-			philoptr->dead = 1;
-			pthread_mutex_unlock(philoptr->deadmutex);
+			printf("he died\n");
+			pthread_mutex_lock(&((t_args *)args)->config->isdeadmutex);
+			((t_args *)args)->config->isdead = 1;
+			pthread_mutex_unlock(&((t_args *)args)->config->isdeadmutex);
+			pthread_mutex_unlock(&((t_args *)args)->philot[i].iseatingmutex);
+			pthread_mutex_unlock(&((t_args *)args)->config->timestoeatmutex);
 			return (1);
 		}
-		pthread_mutex_unlock(philoptr->timestoeatmutex);
+		pthread_mutex_unlock(&((t_args *)args)->philot[i].iseatingmutex);
+		pthread_mutex_unlock(&((t_args *)args)->config->timestoeatmutex);
+		i++;
 	}
 	return (0);
 }
 
-//!!!!above 2 functions are for observer loop
-
-void	observerroutine(t_philoconf config, t_philot **philot,
-		t_philopointer *philoptr)
+void	*observerroutine(void *args)
 {
-	while (checkdead(config, philot, philoptr) || checktimesate(config, philot,
-			philoptr))
+	while (checkdead(args) != 1 && checktimesate(args) != 1)
 		;
-	pthread_mutex_lock(philoptr->deadmutex);
-	philoptr->dead = 1;
-	pthread_mutex_unlock(philoptr->deadmutex);
-}
-int	deadloop(t_philoconf config, t_philot **philot, t_philopointer *philoptr)
-{
-	pthread_mutex_lock(philoptr->deadmutex);
-	if (philoptr->dead == 1)
-		return (pthread_mutex_unlock(philoptr->deadmutex), 0);
-	pthread_mutex_unlock(philoptr->deadmutex);
-	return (1);
-}
-
-void	philoroutine(t_philoconf config, t_philot **philot,
-		t_philopointer *philoptr)
-{
 	pthread_detach(pthread_self());
-	while (deadloop != 1)
-	{
-		eating();
-		sleeping();
-		thinking();
-	}
+	return (NULL);
 }
 
-void	initthreads(t_philoconf config, t_philot **philot,
-		t_philopointer *philoptr)
+int	deadloop(void *args)
 {
+	pthread_mutex_lock(&((t_args *)args)->config->isdeadmutex);
+	if ((((t_args *)args)->config->isdead) == 1)
+		return (pthread_mutex_unlock(&((t_args *)args)->config->isdeadmutex),
+			1);
+	pthread_mutex_unlock(&((t_args *)args)->config->isdeadmutex);
+	return (0);
+}
+
+void	sleeping(t_config config, t_philot *philot)
+{
+	printf("%ld %ld is sleeping\n", get_current_time() - config.starttime,
+		philot->threadid);
+	precise_usleep(config.timetosleep);
+	philot->timelastmeal = get_current_time();
+}
+
+void	eating(t_config config, t_philot *philot)
+{
+	pthread_mutex_lock(&philot->rightfork);
+	printf("%ld %ld has taken a fork\n", get_current_time() - config.starttime,
+		philot->threadid);
+	if (config.numberofphil == 1)
+	{
+		precise_usleep(config.timetodie);
+		pthread_mutex_unlock(&philot->rightfork);
+		return ;
+	}
+	pthread_mutex_lock(&philot->leftfork);
+	printf("%ld %ld has taken a fork\n", get_current_time() - config.starttime,
+		philot->threadid);
+	pthread_mutex_lock(&philot->iseatingmutex);
+	philot->iseating = 1;
+	pthread_mutex_unlock(&philot->iseatingmutex);
+	precise_usleep(config.timetoeat);
+	philot->timelastmeal = get_current_time();
+	pthread_mutex_lock(&philot->iseatingmutex);
+	philot->iseating = 0;
+	pthread_mutex_unlock(&philot->iseatingmutex);
+	pthread_mutex_unlock(&philot->leftfork);
+	pthread_mutex_unlock(&philot->rightfork);
+}
+
+void	thinking(t_config config, t_philot *philot)
+{
+	printf("%ld %ld is thinking\n",get_current_time() - config.starttime,
+		philot->threadid);
+}
+
+void	*philoroutine(void *args)
+{
+	while (deadloop(args) != 1)
+	{
+		eating(*(((t_args *)args)->config), ((t_args *)args)->philot);
+		thinking(*(((t_args *)args)->config), ((t_args *)args)->philot);
+		sleeping(*(((t_args *)args)->config), ((t_args *)args)->philot);
+	}
+	pthread_detach(pthread_self());
+	return (NULL);
+}
+
+void	launchthreads(t_args *args)
+{
+	pthread_t	observer;
+	int			i;
+
+	i = 0;
+	if (pthread_create(&observer, NULL, observerroutine, args) != 0)
+		ft_error("should be destroying all");
+	while (i < args->config->numberofphil)
+	{
+		if (pthread_create((pthread_t *)&args->philot[i], NULL, philoroutine,
+				args) != 0)
+			ft_error("should be destroying all");
+		i++;
+	}
 }
 
 int	main(int ac, char **av)
 {
-	t_philoconf		config;
-	t_philopointer	*philoptr;
-	t_philot		**philot;
+	t_args		*args;
+	t_philot	*philot;
+	t_config	*config;
 
 	philot = NULL;
 	config = handleinput(ac, av);
-	philoptr = alloc(config);
-	initmutex(config, philoptr);
-	initphilos(config, philot, philoptr);
-	initthreads(config, philot, philoptr);
+	args = malloc(sizeof(t_args));
+	args->config = config;
+	args->philot = philot;
+	alloc(args);
+	launchthreads(args);
+	(void)philot;
+	(void)config;
 	return (0);
 }
