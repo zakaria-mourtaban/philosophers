@@ -1,6 +1,6 @@
 NAME = philo
 CFLAGS = -Wall -Werror -Wextra -g
-SRCS = philosrc/philo.c
+SRCS = philosrc/philo.c philosrc/initphilos.c philosrc/timeutils.c philosrc/handleinput.c
 OBJS = $(SRCS:%.c=%.o)
 
 # Paths to ft_printf, libft, and MinilibX directories

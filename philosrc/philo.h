@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:43:24 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/27 23:19:01 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/28 01:44:54 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,36 +22,34 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef struct s_philot
+typedef struct s_data
 {
-	pthread_mutex_t	rightfork;
-	pthread_mutex_t	leftfork;
-	pthread_mutex_t	iseatingmutex;
-	unsigned int	timelastmeal;
-	int				iseating;
-	int				timestoeat;
-	int				timesate;
-	pthread_t		threadid;
-}					t_philot;
-
-typedef struct s_config
-{
-	pthread_mutex_t	*forkmutexs;
-	pthread_mutex_t	isdeadmutex;
-	pthread_mutex_t	timestoeatmutex;
-	unsigned int	starttime;
-	int				isdead;
 	int				timetoeat;
 	int				timetosleep;
 	int				timetodie;
 	int				timestoeat;
-	int				numberofphil;
-}					t_config;
+	int				numberofphilo;
+	int				starttime;
+	int				dead;
+	pthread_mutex_t	deadmutex;
+	pthread_mutex_t	*forks;
+}					t_data;
 
-typedef struct s_args
+typedef struct s_philo
 {
-	t_config *config;
-	t_philot *philot;
-}	t_args;
+	pthread_mutex_t	firstfork;
+	pthread_mutex_t	secondfork;
+	pthread_t		threadid;
+	int				id;
+	unsigned long	startingtime;
+	unsigned long	lastmeal;
+	int				timesate;
+	t_data			data;
+}					t_philo;
+
+t_philo				*initphilo(t_data data);
+t_data				handleinput(int ac, char **av);
+size_t				get_current_time(void);
+void				precise_usleep(unsigned int microseconds);
 
 #endif
