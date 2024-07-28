@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 01:44:27 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/28 01:44:38 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/28 02:11:04 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ t_philo	*initphilo(t_data data)
 		philo[i].secondfork = data.forks[(i + 1) % data.numberofphilo];
 		philo[i].id = i + 1;
 		philo[i].timesate = 0;
+		philo[i].data.sync = 0;
+		pthread_mutex_init(&philo[i].iseatingmutex,NULL);
+		pthread_mutex_init(&philo[i].data.syncmutex,NULL);
 		i++;
 	}
 	return philo;
