@@ -1,5 +1,5 @@
 NAME = philo
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=thread
 SRCS = philosrc/philo.c philosrc/timeutils.c philosrc/handling.c philosrc/initphilos.c philosrc/observerroutine.c philosrc/philoroutine.c
 OBJS = $(SRCS:%.c=%.o)
 
@@ -13,11 +13,11 @@ LIBFT_LIB = $(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT_LIB)
-	gcc $(CFLAGS) -o $(NAME) $(OBJS) -Iphilosrc -L$(LIBFT_DIR) -lft -pthread
+	clang $(CFLAGS) -o $(NAME) $(OBJS) -Iphilosrc -L$(LIBFT_DIR) -lft -pthread
 
 # Rule to build object files from source files
 %.o: philosrc/%.c philosrc/philo.h
-	gcc $(CFLAGS) -c $< -o $@
+	clang $(CFLAGS) -c $< -o $@
 
 # Rule to build the libft library
 $(LIBFT_LIB):

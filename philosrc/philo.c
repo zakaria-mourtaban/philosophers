@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 12:29:05 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 18:26:29 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 18:28:07 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	freeall(t_philo *philos)
 		pthread_mutex_destroy(&philos->data->forks[i]);
 		i++;
 	}
-	if (philos->data->deadmutex)
 	pthread_mutex_destroy(&philos->data->deadmutex);
 	pthread_mutex_destroy(&philos->data->datamutex);
 	free(philos->data->forks);

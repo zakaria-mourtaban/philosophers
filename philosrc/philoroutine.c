@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:53:54 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 18:19:24 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 18:38:05 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	eating(t_philo *philo)
 	printf("%ld philosopher[%d] is eating\n", get_current_time()
 		- philo->data->starttime, philo->id);
 	precise_usleep(philo->data->timetoeat);
-	philo->last_meal = get_current_time();
 	pthread_mutex_lock(&philo->eatingmutex);
+	philo->last_meal = get_current_time();
 	philo->iseating = 0;
 	pthread_mutex_unlock(&philo->eatingmutex);
 	pthread_mutex_unlock(&philo->data->forks[philo->rightforkid]);
@@ -82,6 +82,8 @@ void	*philoroutine(void *arg)
 		sleeping(philo);
 		philo->timesate += 1;
 	}
+	pthread_mutex_lock(&philo->data->datamutex);
 	philo->data->nbfull += 1;
+	pthread_mutex_unlock(&philo->data->datamutex);
 	return (NULL);
 }
