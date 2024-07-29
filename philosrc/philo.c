@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 12:29:05 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 18:28:07 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:27:43 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	launchthreads(t_philo *philos)
 
 void	freeall(t_philo *philos)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < philos->data->numberofphilo)
@@ -73,7 +73,7 @@ void	freeall(t_philo *philos)
 
 int	main(int ac, char **av)
 {
-	t_philo *philos;
+	t_philo	*philos;
 
 	philos = NULL;
 	initphilos(&philos, ac, av);

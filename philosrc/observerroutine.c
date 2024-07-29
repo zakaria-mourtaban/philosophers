@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:47:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 18:39:40 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:25:56 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,10 @@ int	isdeadcheck(t_philo *philos)
 	while (i < philos->data->numberofphilo)
 	{
 		pthread_mutex_lock(&philos[i].eatingmutex);
-		if ((get_current_time()
-				- (philos[i].last_meal)) > (long unsigned int)philos[i].data->timetodie
-			&& philos[i].iseating != 1)
+		if ((philos[i].mealtime) <= (get_current_time()
+				- philos[i].data->timetodie) && philos[i].iseating != 1)
 		{
-			printf("%ld philosopher[%d] has died\n", get_current_time()
+			printf("%ld %d has died\n", get_current_time()
 				- philos->data->starttime, philos[i].id);
 			pthread_mutex_lock(&philos->data->deadmutex);
 			philos[0].data->dead = 1;
@@ -33,18 +32,35 @@ int	isdeadcheck(t_philo *philos)
 			return (1);
 		}
 		pthread_mutex_unlock(&philos[i].eatingmutex);
+		i++;
 	}
 	return (0);
 }
 
 int	checkfull(t_philo *philos)
 {
-	int i;
-	pthread_mutex_lock(&philos->data->datamutex);
-	i = philos->data->nbfull;
-	pthread_mutex_unlock(&philos->data->datamutex);
-	if (philos->data->numberofphilo == i)
+	int	i;
+	int	cnt;
+
+	cnt = 0;
+	i = 0;
+	if (philos->data->timestoeat == -1)
+		return (0);
+	while (i < philos->data->numberofphilo)
+	{
+		pthread_mutex_lock(&philos[i].data->datamutex);
+		if (philos[i].timesate == philos->data->timestoeat)
+			cnt++;
+		pthread_mutex_unlock(&philos[i].data->datamutex);
+		i++;
+	}
+	if (cnt == philos->data->numberofphilo)
+	{
+		pthread_mutex_lock(&philos->data->deadmutex);
+		philos[0].data->dead = 1;
+		pthread_mutex_unlock(&philos->data->deadmutex);
 		return (1);
+	}
 	return (0);
 }
 
@@ -55,10 +71,11 @@ void	*observerroutine(void *args)
 	philos = args;
 	while (1)
 	{
-		if (isdeadcheck(philos) == 1
-			|| checkfull(philos) == 1)
+		if (checkfull(philos) == 1)
 			break ;
-		usleep(200);
+		if (isdeadcheck(philos) == 1)
+			break ;
+		usleep(100);
 	}
 	return (NULL);
 }

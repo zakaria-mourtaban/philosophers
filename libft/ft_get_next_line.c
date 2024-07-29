@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   ft_get_next_line.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 13:36:39 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/06/26 14:17:41 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:28:49 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*get_substr(char	*buffer)
 		return (free(str), free(buffer), NULL);
 	free (buffer);
 	return (str);
-}	
+}
 
 char	*get_lines(char *buffer)
 {

@@ -1,5 +1,5 @@
-NAME = philo
-CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=thread
+NAME = philosophers
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread
 SRCS = philosrc/philo.c philosrc/timeutils.c philosrc/handling.c philosrc/initphilos.c philosrc/observerroutine.c philosrc/philoroutine.c
 OBJS = $(SRCS:%.c=%.o)
 

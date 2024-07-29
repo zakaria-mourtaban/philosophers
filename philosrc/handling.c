@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 01:29:07 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 16:13:47 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:27:13 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ac6(char **av)
 void	ac5(int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
-		ft_error("./exec numberofphilosophers timetodie timetoeat timetosleep ");
+		ft_error("./exec numberofphilosophers timetodie timetoeat timetosleep");
 	if (ac == 6)
 		ac6(av);
 	if (!ft_isdigit(*av[1]) || !ft_isdigit(*av[2]) || !ft_isdigit(*av[3])

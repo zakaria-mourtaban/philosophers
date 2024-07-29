@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 01:30:08 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 17:52:35 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:28:16 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	precise_usleep(unsigned int milliseconds)
 {
 	struct timeval	start_time;
 	struct timeval	current_time;
+	unsigned int	elapsed_time;
+	unsigned int	remaining_time;
 
-	unsigned int elapsed_time;
-	unsigned int remaining_time;
 	if (milliseconds == 0)
 		return ;
 	remaining_time = milliseconds * 1000;
