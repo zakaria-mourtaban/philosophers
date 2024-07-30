@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:53:54 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 15:45:17 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:11:37 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ void	eating(t_philo *philo)
 	pthread_mutex_lock(&philo->eatingmutex);
 	philo->iseating = 0;
 	pthread_mutex_unlock(&philo->eatingmutex);
-	pthread_mutex_unlock(philo->leftfork);
-	pthread_mutex_unlock(philo->rightfork);
+	unlockmut(philo);
 }
 
 void	thinking(t_philo *philo)

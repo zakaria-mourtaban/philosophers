@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 00:14:44 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 15:19:35 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 17:11:21 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,5 @@ unsigned long			get_current_time(void);
 void					precise_usleep(unsigned int microseconds);
 void					*observerroutine(void *args);
 void					*philoroutine(void *arg);
+void					unlockmut(t_philo *philo);
 #endif
