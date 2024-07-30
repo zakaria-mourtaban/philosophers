@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:47:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 15:34:37 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:44:15 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	isdeadcheck(t_philo *philos)
 	while (i < philos->data->numberofphilo)
 	{
 		pthread_mutex_lock(&philos[i].eatingmutex);
+		pthread_mutex_lock(&philos[i].data->datamutex);
 		if ((get_current_time()
 				- philos[i].mealtime) >= (philos[i].data->timetodie)
 			&& philos[i].iseating != 1)
@@ -30,8 +31,10 @@ int	isdeadcheck(t_philo *philos)
 			philos[0].data->dead = 1;
 			pthread_mutex_unlock(&philos->data->deadmutex);
 			pthread_mutex_unlock(&philos[i].eatingmutex);
+			pthread_mutex_unlock(&philos[i].data->datamutex);
 			return (1);
 		}
+		pthread_mutex_unlock(&philos[i].data->datamutex);
 		pthread_mutex_unlock(&philos[i].eatingmutex);
 		i++;
 	}

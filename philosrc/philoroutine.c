@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:53:54 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 15:38:08 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:45:17 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	eating(t_philo *philo)
 	printing(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->eatingmutex);
 	philo->iseating = 1;
+	philo->mealtime = get_current_time();
 	pthread_mutex_unlock(&philo->eatingmutex);
 	printing(philo, "is eating");
-	philo->mealtime = get_current_time();
 	precise_usleep(philo->data->timetoeat);
 	pthread_mutex_lock(&philo->eatingmutex);
 	philo->iseating = 0;
