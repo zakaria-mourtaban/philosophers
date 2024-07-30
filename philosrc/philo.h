@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 00:14:44 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 12:16:35 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:19:35 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef struct s_philo
 	int					timesate;
 	int					iseating;
 	pthread_mutex_t		eatingmutex;
-	pthread_mutex_t		leftfork;
-	pthread_mutex_t		rightfork;
+	pthread_mutex_t		*leftfork;
+	pthread_mutex_t		*rightfork;
 	t_data				*data;
 }						t_philo;
 void					printing(t_philo *philo, char *msg);

@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:47:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 12:10:24 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:34:37 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ int	isdeadcheck(t_philo *philos)
 	while (i < philos->data->numberofphilo)
 	{
 		pthread_mutex_lock(&philos[i].eatingmutex);
-		if ((philos[i].mealtime) <= (get_current_time()
-				- philos[i].data->timetodie) && philos[i].iseating != 1)
+		if ((get_current_time()
+				- philos[i].mealtime) >= (philos[i].data->timetodie)
+			&& philos[i].iseating != 1)
 		{
 			printf("%ld %d has died\n", get_current_time()
 				- philos->data->starttime, philos[i].id);
@@ -75,7 +76,6 @@ void	*observerroutine(void *args)
 			break ;
 		if (isdeadcheck(philos) == 1)
 			break ;
-		usleep(100);
 	}
 	return (NULL);
 }
