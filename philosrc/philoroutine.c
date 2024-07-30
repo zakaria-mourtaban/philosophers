@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:53:54 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 21:33:36 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:19:01 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,43 +24,38 @@ int	isdeadloop(t_philo *philo)
 
 void	eating(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->forks[philo->rightforkid]);
-	printf("%ld %d took a fork\n", get_current_time() - philo->data->starttime,
-		philo->id);
+	pthread_mutex_lock(&philo->rightfork);
+	printing(philo, "took a fork");
 	if (philo->data->numberofphilo == 1)
 	{
 		precise_usleep(philo->data->timetodie + 1);
-		pthread_mutex_unlock(&philo->data->forks[philo->rightforkid]);
+		pthread_mutex_unlock(&philo->rightfork);
 		return ;
 	}
-	pthread_mutex_lock(&philo->data->forks[philo->leftforkid]);
-	printf("%ld %d took a fork\n", get_current_time() - philo->data->starttime,
-		philo->id);
+	pthread_mutex_lock(&philo->leftfork);
+	printing(philo, "took a fork");
 	pthread_mutex_lock(&philo->eatingmutex);
 	philo->iseating = 1;
 	pthread_mutex_unlock(&philo->eatingmutex);
 	philo->last_meal = philo->mealtime;
-	printf("%ld %d is eating\n", get_current_time() - philo->data->starttime,
-		philo->id);
+	printing(philo, "is eating");
 	precise_usleep(philo->data->timetoeat);
 	pthread_mutex_lock(&philo->eatingmutex);
 	philo->mealtime = get_current_time();
 	philo->iseating = 0;
 	pthread_mutex_unlock(&philo->eatingmutex);
-	pthread_mutex_unlock(&philo->data->forks[philo->rightforkid]);
-	pthread_mutex_unlock(&philo->data->forks[philo->leftforkid]);
+	pthread_mutex_unlock(&philo->leftfork);
+	pthread_mutex_unlock(&philo->rightfork);
 }
 
 void	thinking(t_philo *philo)
 {
-	printf("%ld %d is thinking\n", get_current_time() - philo->data->starttime,
-		philo->id);
+	printing(philo, "is thinking");
 }
 
 void	sleeping(t_philo *philo)
 {
-	printf("%ld %d is sleeping\n", get_current_time() - philo->data->starttime,
-		philo->id);
+	printing(philo, "is sleeping");
 	precise_usleep(philo->data->timetosleep);
 }
 

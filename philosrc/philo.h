@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 00:14:44 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 21:27:56 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:16:35 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ typedef struct s_philo
 	int					timesate;
 	int					iseating;
 	pthread_mutex_t		eatingmutex;
+	pthread_mutex_t		leftfork;
+	pthread_mutex_t		rightfork;
 	t_data				*data;
 }						t_philo;
-
+void					printing(t_philo *philo, char *msg);
 t_data					handleinput(int ac, char **av);
 void					initphilos(t_philo **philos, int ac, char **av);
 unsigned long			get_current_time(void);

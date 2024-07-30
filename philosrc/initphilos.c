@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:34:08 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/29 21:18:53 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:18:02 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@ void	initphilos2(t_data *data, t_philo **philos, int i)
 	(*(philos) + i)->iseating = 0;
 	(*(philos) + i)->leftforkid = i;
 	(*(philos) + i)->rightforkid = (i + 1) % data->numberofphilo;
+	(*(philos) + i)->leftfork = data->forks[i];
+	(*(philos) + i)->rightfork = data->forks[(i + 1) % data->numberofphilo];
 	if (i == data->numberofphilo)
 	{
 		(*(philos) + i)->leftforkid = (i + 1) % data->numberofphilo;
 		(*(philos) + i)->rightforkid = i;
+		(*(philos) + i)->leftfork = data->forks[(i + 1) % data->numberofphilo];
+		(*(philos) + i)->rightfork = data->forks[i];
 	}
 	(*(philos) + i)->timesate = 0;
 }

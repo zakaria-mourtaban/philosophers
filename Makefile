@@ -1,6 +1,6 @@
 NAME = philosophers
-CFLAGS = -Wall -Werror -Wextra -g -fsanitize=thread
-SRCS = philosrc/philo.c philosrc/timeutils.c philosrc/handling.c philosrc/initphilos.c philosrc/observerroutine.c philosrc/philoroutine.c
+CFLAGS = -Wall -Werror -Wextra -g
+SRCS = philosrc/philo.c  philosrc/utils.c philosrc/timeutils.c philosrc/handling.c philosrc/initphilos.c philosrc/observerroutine.c philosrc/philoroutine.c
 OBJS = $(SRCS:%.c=%.o)
 
 # Paths to libft directory
