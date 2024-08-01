@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 16:53:54 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 17:11:37 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/08/01 22:27:56 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	*philoroutine(void *arg)
 
 	philo = arg;
 	if (philo->id % 2 == 0)
-		precise_usleep(1);
+		precise_usleep(20);
 	while (isdeadloop(philo) != 1 && philo->timesate != philo->data->timestoeat)
 	{
 		if (isdeadloop(philo) == 1)
