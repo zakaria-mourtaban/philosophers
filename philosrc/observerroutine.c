@@ -6,7 +6,7 @@
 /*   By: zmourtab <zakariamourtaban@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 13:47:59 by zmourtab          #+#    #+#             */
-/*   Updated: 2024/07/30 15:44:15 by zmourtab         ###   ########.fr       */
+/*   Updated: 2024/09/07 23:26:54 by zmourtab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	*observerroutine(void *args)
 			break ;
 		if (isdeadcheck(philos) == 1)
 			break ;
+		precise_usleep(1);
 	}
 	return (NULL);
 }

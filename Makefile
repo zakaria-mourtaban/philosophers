@@ -1,5 +1,5 @@
 NAME = philosophers
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 SRCS = philosrc/philo.c  philosrc/utils.c philosrc/timeutils.c philosrc/handling.c philosrc/initphilos.c philosrc/observerroutine.c philosrc/philoroutine.c
 OBJS = $(SRCS:%.c=%.o)
 
